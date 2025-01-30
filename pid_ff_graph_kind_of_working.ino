@@ -13,13 +13,33 @@ void setup() {
   Wire.write(0x6B);                  // Talk to the register 6B
   Wire.write(0x00);                  // Make reset - place a 0 into the 6B register
   Wire.endTransmission(true);        //end the transmissio
+  Serial.begin(9600);
+  // put your setup code here, to run once:
+  //------Encoder HW Interrupt setup-----//
+  pinMode(8, INPUT_PULLUP);
+  digitalWrite(8, HIGH);
+  // attachInterrupt(digitalPinToInterrupt(2), mot_rencoder, RISING);
+
+  pinMode(3, INPUT_PULLUP);
+  digitalWrite(3, HIGH);
+  attachInterrupt(digitalPinToInterrupt(3), mot_rencoder_left, RISING);
+  // ---------------------------------------------- ///
+
+  //------Encoder HW Interrupt setup-----//
+  pinMode(7, INPUT_PULLUP);  //10
+  digitalWrite(7, HIGH);
+  // attachInterrupt(digitalPinToInterrupt(2), mot_rencoder, RISING);
+
+  pinMode(2, INPUT_PULLUP);  //11
+  digitalWrite(2, HIGH);
+  attachInterrupt(digitalPinToInterrupt(2), mot_rencoder_right, RISING);
 }
 
 void loop() {
   read_imu();
   //   float pidOutput = computePID(pitch); // Compute PID output
   float pidOutput = controller_simple_why_complicate_life();
-  bluetooth_send();
+  //bluetooth_send(pitch);
 
   
   controlMotors(pidOutput); // Control motors based on PID output
@@ -31,12 +51,15 @@ void loop() {
   // Serial.print(roll);
   // Serial.print(" | yaw Angle: ");
   // Serial.print(yaw);
-  Serial.print(" | pitch Angle: ");
+  //Serial.print(" | pitch Angle: ");
   Serial.println(pitch);
-  Serial.print(" | tilt error: ");
-  Serial.print(tilt_error_print);
-  Serial.print(" | PID Output: ");
-  Serial.println(pidOutput);
+  //Serial.print(" | tilt error, PID Output: ");
+  //Serial.print( wheel_pulse_count_left);
+  ///Serial.print(" ; ");
+  //Serial.println(wheel_pulse_count_right);
+
+  //Serial.println("Tilt Error: " + String(tilt_error_print, 2) + " pitch: " + String(pitch, 2) );
+ // Serial.println(pidOutput);
 
   // Write data to CSV format via serial
   //write_csv();
