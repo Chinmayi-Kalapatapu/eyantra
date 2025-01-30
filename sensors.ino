@@ -5,19 +5,26 @@
 // Logic: Configure encoder pins and set up hardware interrupts for pulse counting.
 // Example Call: setupEncoder();
 void setupEncoder() {
-  pinMode(encodPinAL, INPUT_PULLUP);
-  digitalWrite(encodPinAL, HIGH);
-  attachInterrupt(digitalPinToInterrupt(encodPinAL), mot_rencoder_left, RISING);
+    Serial.begin(9600);
+  // put your setup code here, to run once:
+  //------Encoder HW Interrupt setup-----//
+  pinMode(8, INPUT_PULLUP);
+  digitalWrite(8, HIGH);
+  // attachInterrupt(digitalPinToInterrupt(2), mot_rencoder, RISING);
 
-  pinMode(encodPinBL, INPUT_PULLUP);
-  digitalWrite(encodPinBL, HIGH);
+  pinMode(3, INPUT_PULLUP);
+  digitalWrite(3, HIGH);
+  attachInterrupt(digitalPinToInterrupt(3), mot_rencoder_left, RISING);
+  // ---------------------------------------------- ///
 
-  pinMode(encodPinAR, INPUT_PULLUP);
-  digitalWrite(encodPinAR, HIGH);
-  attachInterrupt(digitalPinToInterrupt(encodPinAR), mot_rencoder_right, RISING);
+  //------Encoder HW Interrupt setup-----//
+  pinMode(7, INPUT_PULLUP);  //10
+  digitalWrite(7, HIGH);
+  // attachInterrupt(digitalPinToInterrupt(2), mot_rencoder, RISING);
 
-  pinMode(encodPinBR, INPUT_PULLUP);
-  digitalWrite(encodPinBR, HIGH);
+  pinMode(2, INPUT_PULLUP);  //11
+  digitalWrite(2, HIGH);
+  attachInterrupt(digitalPinToInterrupt(2), mot_rencoder_right, RISING);
 }
 
 // Function Name: mot_rencoder_left
@@ -25,7 +32,10 @@ void setupEncoder() {
 // Output: None
 // Logic: Interrupt Service Routine (ISR) for the left motor encoder. Increments or decrements the wheel pulse count based on the encoder signal.
 // Example Call: Triggered automatically by an interrupt.
+
+
 void mot_rencoder_left() {
+  // if (digitalRead(encodPinBR) == HIGH) {
   if (digitalRead(encodPinBL) > digitalRead(encodPinAL)) {
     wheel_pulse_count_left = wheel_pulse_count_left + 1;
   } 
@@ -34,12 +44,8 @@ void mot_rencoder_left() {
   }
 }
 
-// Function Name: mot_rencoder_right
-// Input: None
-// Output: None
-// Logic: Interrupt Service Routine (ISR) for the right motor encoder. Increments or decrements the wheel pulse count based on the encoder signal.
-// Example Call: Triggered automatically by an interrupt.
 void mot_rencoder_right() {
+  // if (digitalRead(encodPinBR) == HIGH) {
   if (digitalRead(encodPinBR) > digitalRead(encodPinAR)) {
     wheel_pulse_count_right = wheel_pulse_count_right - 1;
   }
@@ -47,6 +53,7 @@ void mot_rencoder_right() {
     wheel_pulse_count_right = wheel_pulse_count_right + 1;
   }
 }
+
 
 // Tanays IMU Read Function
 void read_imu(){
@@ -88,10 +95,10 @@ void read_imu(){
 
   // Complementary filter - combine acceleromter and gyro angle values
   roll = (0.98 * gyroAngleX) + (0.02 * accAngleX);
-  pitch =(0.98 * gyroAngleY) + (0.02 * accAngleY);
+  pitch = (0.98 * gyroAngleY) + (0.02 * accAngleY);
 
-  gyroAngleX=roll;     //corrects the gyroAngleX and y else senser reading gyroAnglex and y starts to drift
-  gyroAngleY=pitch;
+  gyroAngleX = roll;     //corrects the gyroAngleX and y else senser reading gyroAnglex and y starts to drift
+  gyroAngleY = pitch;
 
   roll -= roll_offset;
 
