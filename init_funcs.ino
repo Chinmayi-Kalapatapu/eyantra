@@ -1,8 +1,8 @@
-void bluetooth_send(){
+void bluetooth_send(float data){
   // Check for data from Serial Monitor
   
-    float serialData = Serial.read();
-    bluetooth.print(serialData); // Send data to Bluetooth
+   
+    bluetooth.print(data); // Send data to Bluetooth
     //Serial.print("Sent to Bluetooth: ");
     //Serial.println(serialData);
   
