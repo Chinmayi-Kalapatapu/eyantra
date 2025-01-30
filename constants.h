@@ -19,14 +19,10 @@ int EN2 = 5;             // Enable pin for Motor B, PWM control
 #define encodPinBL 3  // Left encoder, channel B
 
 // Variables for wheel angle and pulse count
-int wheel_pulse_count_left = 0;  // Left wheel pulse count
-int wheel_pulse_count_right = 0; // Right wheel pulse count
-float wheel_angle_left = 0.0;    // Angle of the left wheel in degrees
-float wheel_angle_old_left = 0.0; // Previous angle of the left wheel
-float wheel_dot_left = 0.0;      // Angular velocity of the left wheel
-float wheel_angle_right = 0.0;   // Angle of the right wheel in degrees
-float wheel_angle_old_right = 0.0; // Previous angle of the right wheel
-float wheel_dot_right = 0.0;     // Angular velocity of the right wheel
+int wheel_pulse_count_left = 0;
+int wheel_pulse_count_right = 0;
+float wheel_angle_left = 0.0, wheel_angle_old_left = 0.0, wheel_dot_left = 0.0;
+float wheel_angle_right = 0.0, wheel_angle_old_right = 0.0, wheel_dot_right = 0.0;
 const float WHEEL_RADIUS = 21.5; // Radius of the wheel in mm
 const int ENCODER_PULSES_PER_REVOLUTION = 300; // Encoder resolution
 
@@ -43,18 +39,20 @@ float looptime_print;
 float roll_offset = 0;
 float tilt_error_print = 0.0;
 
-// PID Parameters
-float kp_tilt = 60;    // Proportional gain for tilt control - 15
-float ki_tilt = 5;   // Integral gain for tilt control - 0
-float kd_tilt = 0.35;   // Derivative gain for tilt control - 100
 
-float kp_pos = 0;      // Proportional gain for position control
+float kp_tilt = 40;    // Proportional gain for tilt control - 15
+float ki_tilt = 0;//45   // Integral gain for tilt control - 0
+float kd_tilt = 10;   // Derivative gain for tilt control - 100
+// kp 45, kd = 10, kp-pos 20
+
+float kp_pos = 0;//-10;      // Proportional gain for position control
 float ki_pos = 0.0;    // Integral gain for position control
-float kd_pos = 0.0;    // Derivative gain for position control
+float kd_pos = 0;//-20.0;    // Derivative in for position control
 
 float alpha = 0.95;    // Weight for complementary filter
 float desired_angle = 0.0; // Desired tilt angle for balance
-float tilt_offset = -5;
+float tilt_offset = -4;
+
 float desired_pos = 0.0;   // Desired position of the bot
 float integral_tilt = 0.0; // Integral term for tilt control
 float integral_pos = 0.0;  // Integral term for position control
@@ -64,6 +62,7 @@ unsigned long previousTime = 0; // Previous timestamp for PID calculation
 
 float tilt_angle = 0.0;      // Current tilt angle
 float current_position = 0.0; // Current position of the bot
+float desired_position = 0.0; // Desired position of the bot
 
 // Complementary Filter Variables
 float filteredAngle = 0.0; // Filtered angle estimate
