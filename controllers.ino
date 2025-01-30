@@ -19,7 +19,7 @@ float getCurrentPosition() {
 // Logic: Sets the motor speed and direction based on the PID output. If pidOutput is positive, motors move forward; if negative, motors move backward. Stops the motors if pidOutput is zero.
 // Example Call: controlMotors(pidOutput);
 void controlMotors(float pidOutput) {
-  int motorSpeed = constrain(abs(pidOutput), 0, 255); // Ensure speed is in valid PWM range
+  int motorSpeed = constrain(abs(pidOutput), 0, 100); // Ensure speed is in valid PWM range
 
   if (pidOutput > 0) {
     // Tilted forward, move motors forward
@@ -76,10 +76,13 @@ void stop() {
   digitalWrite(inputPin3, LOW);
   digitalWrite(inputPin4, LOW);
 }
-
+ 
 // New controller
 float controller_simple_why_complicate_life(){
   unsigned long currentTime = millis();
+  current_position = getCurrentPosition();
+  Serial.println("current_position: " + String(current_position, 2));
+
   float deltaTime = (currentTime - previousTime) / 1000.0; // Convert ms to seconds
   if (deltaTime <= 0) deltaTime = 0.001;
 
@@ -91,7 +94,9 @@ float controller_simple_why_complicate_life(){
 
   previousTiltError = tilt_error;
   previousTime = currentTime;
-
+  float velocity_error = (desired_pos - current_position) / deltaTime;
+  float pos_error = (desired_pos - current_position);
+  PID_tilt_control = PID_tilt_control + velocity_error*kd_pos + pos_error*kp_pos;
   if ((pitch > 20) || (pitch < -25)){
         PID_tilt_control = 0;
         integral_tilt = 0;
